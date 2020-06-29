@@ -1,12 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const {
-    getBootcamps,
-} = require("../controllers/data");
+const { getRecords } = require("../controllers/data");
 
-router
-.route("/")
-.get(getBootcamps)
-
+router.route("/").get(getRecords);
 
 module.exports = router;

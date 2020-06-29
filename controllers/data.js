@@ -1,14 +1,14 @@
-const Data = require('../models/data');
+const Data = require("../models/data");
 
-
-//@desc     Get all bootcamps
-//@route    GET /api/v1/bootcamps
+//@desc     Get all records
+//@route    GET /api/v1/records
 //@access   Public
-exports.getBootcamps = async (req, res, next) => {
+exports.getRecords = async (req, res, next) => {
   try {
-    console.log(req.query);
-    const bootcamps = await Data.find(req.query);
-    res.status(200).json({ status: true, data: bootcamps });
+    const records = await Data.find();
+    res
+      .status(200)
+      .json({ status: true, totalRecords: records.length, data: records });
   } catch (err) {
     res.status(400).json({ success: false });
   }

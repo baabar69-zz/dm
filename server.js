@@ -1,5 +1,5 @@
 const express = require("express");
-const dotenv = require("dotenv"); 
+const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const colors = require("colors");
 const data = require("./routes/data");
@@ -12,16 +12,15 @@ connectDB();
 app.use(express.json());
 
 //Mounting Routers
-app.use("/api/v1/data", data);
-
+app.use("/api/v1/records", data);
 
 //Starting Server
-const PATH = process.env.PORT || 3000
+const PATH = process.env.PORT || 3000;
 const server = app.listen(PATH, () => {
-    console.log(`App listening on port ${PATH}!`.yellow.bold);
+  console.log(`App listening on port ${PATH}!`.yellow.bold);
 });
-  
+
 process.on("unhandledRejection", (err, promise) => {
-console.log(`Error : ${err.message}`.red);
-server.close(() => process.exit(1));
+  console.log(`Error : ${err.message}`.red);
+  server.close(() => process.exit(1));
 });
