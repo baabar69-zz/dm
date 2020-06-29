@@ -14,6 +14,40 @@ exports.getRecords = async (req, res, next) => {
   }
 };
 
+//@desc     Get single record
+//@route    GET /api/v1/records/:id
+//@access   Public
+exports.getSingleRecord = async (req, res, next) => {
+  try {
+    let name = req.params.name.split(" ");
+    name = name[0];
+
+    let uid = "";
+    uid = req.params.uid;
+    uid = uid.replace(/[^\w\s]/gi, "");
+    uid = uid.replace(/\s/g, "");
+    uid = uid.substring(0, 10);
+
+    const records = await Data.find({
+      company: { $regex: name, $options: "i" },
+      uid: uid,
+    });
+    if (records.length === 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "No records found" });
+    }
+    res.status(200).json({
+      status: true,
+      get: true,
+      totalRecords: records.length,
+      data: records,
+    });
+  } catch (err) {
+    res.status(400).json({ success: false });
+  }
+};
+
 //@desc     Get filtered records with pagination
 //@route    GET /api/v1/records?select=company&page=1&limit=4
 //@access   Public
@@ -75,5 +109,80 @@ exports.getFilteredRecords = async (req, res, next) => {
     res.status(400).json({
       success: false,
     });
+  }
+};
+
+//@desc     Find a record
+//@route    POST /api/v1/records
+//@access   Public
+exports.createRecords = async (req, res, next) => {
+  try {
+    let uidName = "";
+    let tempName = req.body.company;
+    tempName = tempName.split(" ");
+    for (let i = 0; i < tempName.length; i++) {
+      if (tempName[i] !== "") {
+        uidName = tempName[i];
+        break;
+      }
+    }
+
+    let uid = "";
+    uid = req.body.phone;
+    uid = uid.replace(/[^\w\s]/gi, "");
+    uid = uid.replace(/\s/g, "");
+
+    req.body["uidName"] = uidName;
+    req.body["uid"] = uid;
+    const data = await Data.create(req.body);
+
+    res.status(201).json({
+      success: true,
+      data: data,
+    });
+  } catch (err) {
+    res.status(400).json({ success: false });
+  }
+};
+
+// @desc      Update a Record
+// @route     PUT /api/v1/records/:id
+// @access    Public
+exports.editRecord = async (req, res, next) => {
+  try {
+    let data = await Data.findById(req.params.id);
+    if (!data) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Not found the record" });
+    }
+
+    data = await Data.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    res.status(200).json({ success: true, data: data });
+  } catch (error) {
+    return res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+// @desc      Delete a Record
+// @route     DELTE /api/v1/records/:id
+// @access    Public
+exports.deleteRecod = async (req, res, next) => {
+  try {
+    let data = await Data.findById(req.params.id);
+    if (!data) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Not found the record" });
+    }
+
+    data.remove();
+    res.status(200).json({ success: true, data: {} });
+  } catch (error) {
+    return res.status(400).json({ success: false, message: error.message });
   }
 };

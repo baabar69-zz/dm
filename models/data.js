@@ -9,10 +9,10 @@ const BootcampSchema = new mongoose.Schema({
   },
   website: {
     type: String,
-    match: [
-      /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi,
-      "please use a valid url",
-    ],
+    // match: [
+    //   /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi,
+    //   "please use a valid url",
+    // ],
   },
   phone: {
     type: String,
@@ -25,6 +25,10 @@ const BootcampSchema = new mongoose.Schema({
     zipcode: String,
   },
   uid: {
+    type: String,
+    unique: true,
+  },
+  uidName: {
     type: String,
     unique: true,
   },
